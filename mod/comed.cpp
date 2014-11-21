@@ -510,8 +510,9 @@ namespace game
         glPopMatrix();
     }
 
-    #define MINTIMEOVER 250
-    #define MAXTIMEASIDE 1000
+    #define MINTIMEOVER 250.0
+    #define MAXTIMEASIDE 1000.0
+    #define HN_FADEDUR 120.0
 
     int firstovermillis = 0-MINTIMEOVER, lastovermillis = 0-MAXTIMEASIDE;
     fpsent *lastoverplayer = NULL;
@@ -519,6 +520,7 @@ namespace game
     void drawhudname(fpsent *d, int w, int h)
     {
         string name = "";
+        float alpha;
         dynent *o = intersectclosest(d->o, worldpos, d);
 
         if(o && (o->type == ENT_PLAYER || o->type == ENT_AI) && !guiisshowing())
@@ -530,10 +532,16 @@ namespace game
 
         if(lastoverplayer && (lastoverplayer->type==ENT_PLAYER || lastoverplayer->type==ENT_AI) && lastmillis > firstovermillis + MINTIMEOVER && lastmillis < lastovermillis + MAXTIMEASIDE)
             sprintf(name, "%s", lastoverplayer->name);
+        else return;
+
+        alpha = 255;
+        if(lastmillis > lastovermillis + MAXTIMEASIDE - HN_FADEDUR)
+            alpha = (-lastmillis + lastovermillis + MAXTIMEASIDE) * (255 / HN_FADEDUR);
+        alpha = max(alpha, 0.0f);
 
         glPushMatrix();
         glScalef(1, 1, 1);
-        draw_text(name, 200, 400, 255, 255, 255, 255);
+        draw_text(name, 200, 400, 255, 255, 255, alpha);
         glPopMatrix();
     }
 }
