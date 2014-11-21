@@ -531,7 +531,7 @@ namespace game
         }
 
         if(lastoverplayer && (lastoverplayer->type==ENT_PLAYER || lastoverplayer->type==ENT_AI) && lastmillis > firstovermillis + MINTIMEOVER && lastmillis < lastovermillis + MAXTIMEASIDE)
-            sprintf(name, "%s", lastoverplayer->name);
+            sprintf(name, "%s", teamcolorname(lastoverplayer));
         else return;
 
         alpha = 255;
