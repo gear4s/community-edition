@@ -517,11 +517,20 @@ namespace game
     int firstovermillis = 0-MINTIMEOVER, lastovermillis = 0-MAXTIMEASIDE;
     fpsent *lastoverplayer = NULL;
 
+    XIDENT(IDF_SWLACC, VARP, hudnamesize, 1, 4, 8);
+    XIDENT(IDF_SWLACC, VARP, hudnameposx, 0, 150, 1000);
+    XIDENT(IDF_SWLACC, VARP, hudnameposy, 0, 200, 1000);
+
     void drawhudname(fpsent *d, int w, int h)
     {
         string name = "";
+        int maxnamew, maxnameh;
         float alpha;
         dynent *o = intersectclosest(d->o, worldpos, d);
+        text_bounds("@@@@@@@@@@@@@@@ (999)", maxnamew, maxnameh);
+        const float hudnamescale = 0.15 + hudnamesize / 8.0;
+        const float posx = hudnameposx * (w / hudnamescale - maxnamew) / 1000;
+        const float posy = hudnameposy * (h / hudnamescale - maxnameh) / 1000;
 
         if(o && (o->type == ENT_PLAYER || o->type == ENT_AI) && !guiisshowing())
         {
@@ -540,8 +549,8 @@ namespace game
         alpha = max(alpha, 0.0f);
 
         glPushMatrix();
-        glScalef(1, 1, 1);
-        draw_text(name, 200, 400, 255, 255, 255, alpha);
+        glScalef(hudnamescale, hudnamescale, 1);
+        draw_text(name, posx, posy, 255, 255, 255, alpha);
         glPopMatrix();
     }
 }
