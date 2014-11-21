@@ -929,6 +929,8 @@ namespace game
     /* frag messages */
     XIDENT(IDF_SWLACC, VARP, fragmsg, 0, 0, 1);
 
+    XIDENT(IDF_SWLACC, VARP, hudname, 0, 0, 1);
+
     void gameplayhud(int w, int h)
     {
         holdscreenlock;
@@ -990,6 +992,8 @@ namespace game
         
         if(fragmsg && (d->lastvictim != NULL || d->lastkiller != NULL) & (lastmillis-d->lastfragtime < fragmsgfade + 255 || lastmillis-d->lastdeathtime < fragmsgfade + 255))
             drawfragmsg(d, w, h);
+
+        if(hudname) drawhudname(d, w, h);
     }
 
     int clipconsole(int w, int h)

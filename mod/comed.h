@@ -32,5 +32,10 @@ namespace game
 
     /* game clock */
     void drawgameclock(int w, int h);
+
+    /* hud names */
+    void drawhudname(fpsent *d, int w, int h);
+    extern int firstovermillis, lastovermillis;
+    extern fpsent *lastoverplayer;
 }
 #endif

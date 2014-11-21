@@ -509,4 +509,31 @@ namespace game
                   r, g, b, a);
         glPopMatrix();
     }
+
+    #define MINTIMEOVER 250
+    #define MAXTIMEASIDE 1000
+
+    int firstovermillis = 0-MINTIMEOVER, lastovermillis = 0-MAXTIMEASIDE;
+    fpsent *lastoverplayer = NULL;
+
+    void drawhudname(fpsent *d, int w, int h)
+    {
+        string name = "";
+        dynent *o = intersectclosest(d->o, worldpos, d);
+
+        if(o && (o->type == ENT_PLAYER || o->type == ENT_AI) && !guiisshowing())
+        {
+            if((fpsent *)o != lastoverplayer || lastmillis > lastovermillis + MAXTIMEASIDE) firstovermillis = lastmillis;
+            lastovermillis = lastmillis;
+            lastoverplayer = (fpsent *)o;
+        }
+
+        if(lastoverplayer && (lastoverplayer->type==ENT_PLAYER || lastoverplayer->type==ENT_AI) && lastmillis > firstovermillis + MINTIMEOVER && lastmillis < lastovermillis + MAXTIMEASIDE)
+            sprintf(name, "%s", lastoverplayer->name);
+
+        glPushMatrix();
+        glScalef(1, 1, 1);
+        draw_text(name, 200, 400, 255, 255, 255, 255);
+        glPopMatrix();
+    }
 }
