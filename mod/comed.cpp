@@ -520,17 +520,16 @@ namespace game
     XIDENT(IDF_SWLACC, VARP, hudnamesize, 1, 4, 8);
     XIDENT(IDF_SWLACC, VARP, hudnameposx, 0, 150, 1000);
     XIDENT(IDF_SWLACC, VARP, hudnameposy, 0, 200, 1000);
+    XIDENT(IDF_SWLACC, VARP, hudteamhealth, 0, 0, 1);
 
     void drawhudname(fpsent *d, int w, int h)
     {
         string name = "";
-        int maxnamew, maxnameh;
+        int maxnamew, maxnameh, lines = 1;
         float alpha;
         dynent *o = intersectclosest(d->o, worldpos, d);
         text_bounds("@@@@@@@@@@@@@@@ (999)", maxnamew, maxnameh);
         const float hudnamescale = 0.15 + hudnamesize / 8.0;
-        const float posx = hudnameposx * (w / hudnamescale - maxnamew) / 1000;
-        const float posy = hudnameposy * (h / hudnamescale - maxnameh) / 1000;
 
         if(o && (o->type == ENT_PLAYER || o->type == ENT_AI) && !guiisshowing())
         {
@@ -543,10 +542,22 @@ namespace game
             sprintf(name, "%s", teamcolorname(lastoverplayer));
         else return;
 
+        if(hudteamhealth && (isteam(d->team, lastoverplayer->team) || player1->state == CS_SPECTATOR) && m_teammode && !m_insta)
+        {
+            string healthcolor, armorcolor;
+            strcpy(healthcolor, (lastoverplayer->health <= 25) ? "\f3" : (lastoverplayer->health <= 50) ? "\f6" : "\f0");
+            strcpy(armorcolor, (lastoverplayer->armour <= 25) ? "\f3" : (lastoverplayer->armour <= 50) ? "\f6" : "\f0");
+            sprintf(name, "%s\n%s%d\f7|%s%d", name, healthcolor, lastoverplayer->health, armorcolor, lastoverplayer->armour);
+            lines = 2;
+        }
+
         alpha = 255;
         if(lastmillis > lastovermillis + MAXTIMEASIDE - HN_FADEDUR)
             alpha = (-lastmillis + lastovermillis + MAXTIMEASIDE) * (255 / HN_FADEDUR);
         alpha = max(alpha, 0.0f);
+
+        const float posx = hudnameposx * (w / hudnamescale - maxnamew) / 1000;
+        const float posy = hudnameposy * (h / hudnamescale - maxnameh * lines) / 1000;
 
         glPushMatrix();
         glScalef(hudnamescale, hudnamescale, 1);
