@@ -538,7 +538,7 @@ namespace game
             lastoverplayer = (fpsent *)o;
         }
 
-        if(lastoverplayer && (lastoverplayer->type==ENT_PLAYER || lastoverplayer->type==ENT_AI) && lastmillis > firstovermillis + MINTIMEOVER && lastmillis < lastovermillis + MAXTIMEASIDE)
+        if(lastoverplayer && (lastoverplayer->type==ENT_PLAYER || lastoverplayer->type==ENT_AI) && lastoverplayer->state == CS_ALIVE && lastmillis > firstovermillis + MINTIMEOVER && lastmillis < lastovermillis + MAXTIMEASIDE)
             sprintf(name, "%s", teamcolorname(lastoverplayer));
         else return;
 
